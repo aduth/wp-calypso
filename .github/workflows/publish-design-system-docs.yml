@@ -1,0 +1,24 @@
+name: Publish Design System Docs
+
+on:
+  push:
+    branches:
+      - add/ds-deploy-workflow
+  workflow_dispatch:
+jobs:
+  Build-Artifact-Action:
+    name: Build-Artifact-Action
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout
+      - uses: actions/setup-node@v4
+        with:
+          cache: 'yarn'
+      - run: yarn workspaces focus @automattic/design-system-docs
+      - run: yarn workspace @automattic/design-system-docs build
+      - name: Upload the artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wpcom
+          path: |
+            apps/design-system-docs/dist
